@@ -10,14 +10,13 @@ Created By
 
 import turtle
 from math import pi, sin, asin, radians, degrees
-bob = turtle.Turtle()
-bob.delay = 0.00000000000000000000000000000000000001
 
 def main():
     """Main part of the program"""
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
     bob = turtle.Turtle()
+    bob.delay = 0.00000000000000000000000000000000000001
     shapelist = {"square":square, "circle":circle, "rectangle":recta}
     info = shapelist[shape](bob)
     bob.hideturtle()
@@ -93,4 +92,3 @@ def info_circ(pen, radius):
     pen.write(text, True, align="left")
 
 main()
-
