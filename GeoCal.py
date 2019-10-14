@@ -9,10 +9,18 @@ Created By
 """
 
 import turtle
+import tkinter as tk
 from math import pi, sin, asin, radians, degrees
+ROOT = tk.Tk()
+W_PX = ROOT.winfo_screenwidth()
+H_PX = ROOT.winfo_screenheight()
+#Estimation of the amount of pixel in a 1 cm line in any direction
+PX_CM = ((W_PX / (ROOT.winfo_screenmmwidth() / 10) + H_PX / (ROOT.winfo_screenmmheight() / 10)) / 2)
 
 def main():
     """Main part of the program"""
+    screen = turtle.Screen()
+    screen.screensize(W_PX//2, H_PX//2)
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
     bob = turtle.Turtle()
@@ -21,19 +29,20 @@ def main():
     info = shapelist[shape](bob)
     bob.hideturtle()
     shape_info(shape, info)
+    screen.mainloop()
 
 #Quadrilaterals
 def square(t):
     """Draw a square"""
     lenght = turtle.textinput("Please input the size", "in cm")
-    lenght = 100 if lenght == "" else float(lenght)
+    lenght = 10 if lenght == "" else float(lenght)*PX_CM
     polygon(t, 4, lenght)
     return lenght
 
 def recta(t):
     """Draw a quadrilateral"""
     side = turtle.textinput("Please input the size in cm", "side1 side2")
-    side = [float(i) for i in side.split()]
+    side = [float(i)*PX_CM for i in side.split()]
     for _ in range(2):
         t.fd(side[0])
         t.lt(90)
