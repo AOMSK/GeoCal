@@ -35,26 +35,29 @@ def main():
 def square(t):
     """Draw a square"""
     lenght = turtle.textinput("Please input the size", "in cm")
-    lenght = 10 if lenght == "" else float(lenght)*PX_CM
-    polygon(t, 4, lenght)
+    lenght = 10 if lenght == "" else float(lenght)
+    lenghtpx = lenght * PX_CM
+    polygon(t, 4, lenghtpx)
     return lenght
 
 def recta(t):
     """Draw a quadrilateral"""
     side = turtle.textinput("Please input the size in cm", "side1 side2")
-    side = [float(i)*PX_CM for i in side.split()]
+    side = [float(i) for i in side.split()]
     for _ in range(2):
-        t.fd(side[0])
+        t.fd(side[0]*PX_CM)
         t.lt(90)
-        t.fd(side[1])
+        t.fd(side[1]*PX_CM)
         t.lt(90)
+    return side
 
 #Ovals
 def circle(t):
     """Draw a circle of a certain radius"""
     radius = turtle.textinput("Please input the radius", "in cm")
     radius = 50 if radius == "" else float(radius)
-    arc(t, radius)
+    radiuspx = radius * PX_CM
+    arc(t, radiuspx)
     return radius
 
 #Draw the lines
@@ -79,25 +82,16 @@ def polygon(t, side=6, lenght=100):
 #Shows the infomations
 def shape_info(name, shape_data):
     """Output the calculations"""
-    info_dict = {"square":info_sq, "circle":info_circ}
-    pen = turtle.Turtle()
-    pen.penup()
-    pen.fd(80)
-    pen.rt(90)
-    pen.fd(30)
-    info_dict[name](pen, shape_data)
-    pen.hideturtle()
+    info_dict = {"square":info_sq}
+    T = tk.Text(ROOT)
+    T.pack()
+    T.insert(tk.END, info_dict[name](shape_data))
+    ROOT.mainloop()
 
-def info_sq(pen, side):
+def info_sq(side):
     """Info of the square"""
-    text = "The area of this square is %.3f sqcm\n (Side^2)\n"%(side**2)
-    text += "The circumference of this square is %.3f cm\n (Side x 4)"%(side*4)
-    pen.write(text, True, align="left")
-
-def info_circ(pen, radius):
-    """Info of the circle"""
-    text = "The area of this circle is %.3f sqcm \n (Pi * R^2)\n"%(pi*radius**2)
-    text += "The circumference of this circle is %.3f cm\n (2 x Pi x R)"%(2*pi*radius)
-    pen.write(text, True, align="left")
+    text = "The area of this square is %.3f sqcm\n(Side^2)\n"%(side**2)
+    text += "The circumference of this square is %.3f cm\n(Side x 4)"%(side*4)
+    return text
 
 main()
