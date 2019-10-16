@@ -12,6 +12,7 @@ import turtle
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees
 ROOT = tk.Tk()
+ROOT.title("Geometric Shape Calculator")
 W_PX = ROOT.winfo_screenwidth()
 H_PX = ROOT.winfo_screenheight()
 #Estimation of the amount of pixel in a 1 cm line in any direction
@@ -20,6 +21,7 @@ PX_CM = ((W_PX / (ROOT.winfo_screenmmwidth() / 10) + H_PX / (ROOT.winfo_screenmm
 def main():
     """Main part of the program"""
     screen = turtle.Screen()
+    screen.title("Graphic Representation")
     screen.screensize(W_PX//2, H_PX//2)
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
@@ -63,7 +65,7 @@ def circle(t):
 #Draw the lines
 def arc(t, radius=50, angle=360.0):
     """Draw an arc"""
-    side = int(angle//(radius//4)+10)
+    side = int(angle//(radius//10)) + 10
     lenght = (pi * radius * 2.0)/side
     angle /= side
     polyline(t, side, lenght, angle)
@@ -82,7 +84,7 @@ def polygon(t, side=6, lenght=100):
 #Shows the infomations
 def shape_info(name, shape_data):
     """Output the calculations"""
-    info_dict = {"square":info_sq}
+    info_dict = {"square":info_sq, "rectangle":info_rect, "circle":info_circ}
     T = tk.Text(ROOT)
     T.pack()
     T.insert(tk.END, info_dict[name](shape_data))
@@ -90,8 +92,21 @@ def shape_info(name, shape_data):
 
 def info_sq(side):
     """Info of the square"""
-    text = "The area of this square is %.3f sqcm\n(Side^2)\n"%(side**2)
-    text += "The circumference of this square is %.3f cm\n(Side x 4)"%(side*4)
+    text = "The area of this square is %.3f sqcm.\n(Side^2)\n"%(side**2)
+    text += "The circumference of this square is %.3f cm\n(Side x 4)\n"%(side*4)
+    text += "All four corners of a square are right angles (90°)."
+    return text
+
+def info_rect(side):
+    """Info of the rectangle"""
+    text = "The area of this rectangle is %.3f sqcm.\n(Width x Height)\n"%(side[0] * side[1])
+    text += "The circumference of this rectangle is %.3f cm.\n(Width x 2 + Height x 2)\n"%(sum(side)*2)
+    text += "All four corners of a rectangle are right angles (90°)."
+    return text
+
+def info_circ(radius):
+    text = "The area of this circle is %.3f sqcm.\n(π x r^2)\n"%(pi * radius ** 2)
+    text += "The circumference of this circle is %.3f cm.\n(2 x π x r)\n"%(2 * pi * radius)
     return text
 
 main()
