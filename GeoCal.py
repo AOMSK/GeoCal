@@ -10,7 +10,7 @@ Created By
 
 import turtle
 import tkinter as tk
-from math import pi, sin, asin, radians, degrees
+from math import pi, sin, asin, radians, degrees, sqrt
 ROOT = tk.Tk()
 ROOT.title("Geometric Shape Calculator")
 W_PX = ROOT.winfo_screenwidth()
@@ -26,8 +26,8 @@ def main():
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
     bob = turtle.Turtle()
-    bob.delay = 0.00000000000000000000000000000000000001
-    shapelist = {"square":square, "circle":circle, "rectangle":recta}
+    bob.delay = 1e-10
+    shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
     info = shapelist[shape](bob)
     bob.hideturtle()
     shape_info(shape, info)
@@ -67,8 +67,13 @@ def ellipse(t):
     """Draw an ellipse"""
     radius = turtle.textinput("Please enter the radiuses", "Minor Major\nin cm")
     radius = [50, 100] if radius == "" else [float(i) for i in radius.split()]
-
-
+    radiuspx = [i*PX_CM for i in radius]
+    t.rt(45)
+    arc(t, radiuspx[1], 90)
+    arc(t, radiuspx[0], 90)
+    arc(t, radiuspx[1], 90)
+    arc(t, radiuspx[0], 90)
+    return radius
 
 #Draw the lines
 def arc(t, radius=50, angle=360.0):
@@ -92,7 +97,7 @@ def polygon(t, side=6, lenght=100):
 #Shows the infomations
 def shape_info(name, shape_data):
     """Output the calculations"""
-    info_dict = {"square":info_sq, "rectangle":info_rect, "circle":info_circ}
+    info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "ellipse": info_ell}
     T = tk.Text(ROOT)
     T.pack()
     T.insert(tk.END, info_dict[name](shape_data))
@@ -120,5 +125,10 @@ def info_circ(radius):
 
 def info_ell(radius):
     """Info of the radius"""
+    text = "The area of this ellipse is %.3f sqcm.\n(π x a x b)\n"%(pi * radius[0] * radius[1])
+    text += "The approximate circumference of this "
+    text += "ellipse is %.3f cm.\n(2 x π x √((a^2 + b^2)/2))\n"%(2 * pi * sqrt((radius[0]**2 + radius[1]**2)/2))
+    return text
+
 
 main()
