@@ -1,7 +1,7 @@
 # Geometric Calculator
 A program to draw and calculates geometric shapes.
 
-Currently Supports
+### Currently Supports
 - [x] Squares
 - [x] Rectangles
 - [ ] Triangles
