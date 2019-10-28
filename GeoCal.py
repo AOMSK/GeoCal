@@ -5,7 +5,7 @@ Created By
 62070088 Tawatchai Hanon
 62070115 Parkorn Kampao
 62070124 Piyaporn Phutpore
-62070196 Sipang Klimhom
+62070196 Sipang Klinhom
 """
 
 import turtle
@@ -53,14 +53,22 @@ def recta(t):
         t.lt(90)
     return side
 
+#CREATE A TRIANGLE
 #Ovals
 def circle(t):
     """Draw a circle of a certain radius"""
     radius = turtle.textinput("Please input the radius", "in cm")
-    radius = 50 if radius == "" else float(radius)
+    radius = 5 if radius == "" else float(radius)
     radiuspx = radius * PX_CM
     arc(t, radiuspx)
     return radius
+
+def ellipse(t):
+    """Draw an ellipse"""
+    radius = turtle.textinput("Please enter the radiuses", "Minor Major\nin cm")
+    radius = [50, 100] if radius == "" else [float(i) for i in radius.split()]
+
+
 
 #Draw the lines
 def arc(t, radius=50, angle=360.0):
@@ -105,8 +113,12 @@ def info_rect(side):
     return text
 
 def info_circ(radius):
+    """Infro of the circle"""
     text = "The area of this circle is %.3f sqcm.\n(π x r^2)\n"%(pi * radius ** 2)
     text += "The circumference of this circle is %.3f cm.\n(2 x π x r)\n"%(2 * pi * radius)
     return text
+
+def info_ell(radius):
+    """Info of the radius"""
 
 main()
