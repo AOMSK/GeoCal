@@ -7,7 +7,7 @@ A program to draw and calculates geometric shapes.
 - [ ] Triangles
 - [ ] Other Polygons
 - [x] Circles
-- [ ] Ellipes
+- [x] Ellipes
 - [ ] 3D Shapes
 - [ ] Cubes
 - [ ] Cuboids
