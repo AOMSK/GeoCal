@@ -12,6 +12,7 @@ import turtle
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt
 ROOT = tk.Tk()
+SCREEN = turtle.Screen()
 ROOT.title("Geometric Shape Calculator")
 W_PX = ROOT.winfo_screenwidth()
 H_PX = ROOT.winfo_screenheight()
@@ -20,18 +21,16 @@ PX_CM = ((W_PX / (ROOT.winfo_screenmmwidth() / 10) + H_PX / (ROOT.winfo_screenmm
 
 def main():
     """Main part of the program"""
-    screen = turtle.Screen()
-    screen.title("Graphic Representation")
-    screen.screensize(W_PX//2, H_PX//2)
+    SCREEN.title("Graphic Representation")
+    SCREEN.screensize(W_PX//2, H_PX//2)
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
     bob = turtle.Turtle()
-    bob.delay = 1e-10
+    bob.delay = 1e-20
     shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
     info = shapelist[shape](bob)
     bob.hideturtle()
     shape_info(shape, info)
-    screen.mainloop()
 
 #Quadrilaterals
 def square(t):
@@ -101,7 +100,6 @@ def shape_info(name, shape_data):
     T = tk.Text(ROOT)
     T.pack()
     T.insert(tk.END, info_dict[name](shape_data))
-    ROOT.mainloop()
 
 def info_sq(side):
     """Info of the square"""
@@ -130,5 +128,18 @@ def info_ell(radius):
     text += "ellipse is %.3f cm.\n(2 x π x √((a^2 + b^2)/2))\n"%(2 * pi * sqrt((radius[0]**2 + radius[1]**2)/2))
     return text
 
+def repeat():
+    """Run this code again"""
+    SCREEN.clear()
+    main()
 
 main()
+
+top = tk.Tk()
+top.title("Calculate Again?")
+top.geometry("300x50")
+b = tk.Button(top,text = "Again", command = repeat)
+b.pack()
+top.mainloop()
+SCREEN.mainloop()
+ROOT.mainloop()
