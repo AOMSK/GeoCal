@@ -1,5 +1,7 @@
 """
 Geometric Shape Calculator
+A calculator and graphic representator for geometric shapes.
+
 Created By
 62070025 Janisda Mukda
 62070088 Tawatchai Hanon
@@ -11,22 +13,25 @@ Created By
 import turtle
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt
-ROOT = tk.Tk()
-SCREEN = turtle.Screen()
-ROOT.title("Geometric Shape Calculator")
-W_PX = ROOT.winfo_screenwidth()
-H_PX = ROOT.winfo_screenheight()
+root = tk.Tk()
+screen = turtle.screen()
+root.title("Geometric Shape Calculator")
+w_px = root.winfo_screenwidth()
+h_px = root.winfo_screenheight()
 #Estimation of the amount of pixel in a 1 cm line in any direction
-PX_CM = ((W_PX / (ROOT.winfo_screenmmwidth() / 10) + H_PX / (ROOT.winfo_screenmmheight() / 10)) / 2)
+px_cm = ((w_px / (root.winfo_screenmmwidth() / 10) + h_px / (root.winfo_screenmmheight() / 10)) / 2)
 
 def main():
-    """Main part of the program"""
-    SCREEN.title("Graphic Representation")
-    SCREEN.screensize(W_PX//2, H_PX//2)
+    """Main part of the programme.
+    Works by taking an input, call the drawing functions,
+    calculate the informations,
+    then output the informations through tkinter."""
+    screen.title("Graphic Representation")
+    screen.screensize(w_px//2, h_px//2)
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     shape = shape.lower()
     bob = turtle.Turtle()
-    bob.delay = 1e-20
+    bob.delay = 1e-20 #set the turtle drawing speed
     shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
     info = shapelist[shape](bob)
     bob.hideturtle()
@@ -37,7 +42,8 @@ def square(t):
     """Draw a square"""
     lenght = turtle.textinput("Please input the size", "in cm")
     lenght = 10 if lenght == "" else float(lenght)
-    lenghtpx = lenght * PX_CM
+    lenghtpx = lenght * px_cm
+    lenghtpx = w_px/3 if lenghtpx > w_px//2 else lenghtpx
     polygon(t, 4, lenghtpx)
     return lenght
 
@@ -45,20 +51,24 @@ def recta(t):
     """Draw a quadrilateral"""
     side = turtle.textinput("Please input the size in cm", "side1 side2")
     side = [float(i) for i in side.split()]
+    side = [5, 10] if side == [] else side
+    sidepx = [i*px_cm for i in side]
+    ratio = sidepx[0] / sidepx[1] #will be used if input is too large to draw
+    sidepx = [(w_px/3)*ratio, w_px/3] if any([sidepx[0] > w_px//2, sidepx[1] > w_px//2]) else sidepx
     for _ in range(2):
-        t.fd(side[0]*PX_CM)
+        t.fd(sidepx[0])
         t.lt(90)
-        t.fd(side[1]*PX_CM)
+        t.fd(sidepx[1])
         t.lt(90)
     return side
 
-#CREATE A TRIANGLE
 #Ovals
 def circle(t):
     """Draw a circle of a certain radius"""
     radius = turtle.textinput("Please input the radius", "in cm")
     radius = 5 if radius == "" else float(radius)
-    radiuspx = radius * PX_CM
+    radiuspx = radius * px_cm
+    radiuspx = w_px/3 if radiuspx > w_px//2 else radiuspx
     arc(t, radiuspx)
     return radius
 
@@ -66,7 +76,9 @@ def ellipse(t):
     """Draw an ellipse"""
     radius = turtle.textinput("Please enter the radiuses", "Minor Major\nin cm")
     radius = [50, 100] if radius == "" else [float(i) for i in radius.split()]
-    radiuspx = [i*PX_CM for i in radius]
+    radiuspx = [i*px_cm for i in radius]
+    ratio = radiuspx[0] / radiuspx[1] #will be used if input is too large to draw
+    radiuspx = [(w_px/3)*ratio, w_px/3] if any([radiuspx[0] > w_px//2, radiuspx[1] > w_px//2]) else radiuspx
     t.rt(45)
     arc(t, radiuspx[1], 90)
     arc(t, radiuspx[0], 90)
@@ -97,7 +109,7 @@ def polygon(t, side=6, lenght=100):
 def shape_info(name, shape_data):
     """Output the calculations"""
     info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "ellipse": info_ell}
-    T = tk.Text(ROOT)
+    T = tk.Text(root)
     T.pack()
     T.insert(tk.END, info_dict[name](shape_data))
 
@@ -130,16 +142,17 @@ def info_ell(radius):
 
 def repeat():
     """Run this code again"""
-    SCREEN.clear()
+    screen.clear()
     main()
 
 main()
 
+#Keep the programme running until closing the windows.
 top = tk.Tk()
 top.title("Calculate Again?")
 top.geometry("300x50")
 b = tk.Button(top,text = "Again", command = repeat)
 b.pack()
 top.mainloop()
-SCREEN.mainloop()
-ROOT.mainloop()
+screen.mainloop()
+root.mainloop()
