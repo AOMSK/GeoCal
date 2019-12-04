@@ -10,16 +10,19 @@ Created By
 62070196 Sipang Klinhom
 """
 
-import turtle
+import turtle, time
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt
 root = tk.Tk()
-screen = turtle.screen()
+screen = turtle.Screen()
 root.title("Geometric Shape Calculator")
 w_px = root.winfo_screenwidth()
 h_px = root.winfo_screenheight()
 #Estimation of the amount of pixel in a 1 cm line in any direction
 px_cm = ((w_px / (root.winfo_screenmmwidth() / 10) + h_px / (root.winfo_screenmmheight() / 10)) / 2)
+scrollbar = tk.Scrollbar(root, orient=tk.VERTICAL, activebackground="#00ffff")
+scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
+mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=w_px//4)
 
 def main():
     """Main part of the programme.
@@ -33,7 +36,13 @@ def main():
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
     shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
-    info = shapelist[shape](bob)
+    try:
+        info = shapelist[shape](bob)
+    except KeyError:
+        mylist.insert(tk.END, "%s is an invalid Shape, or Shape not supported"%shape)
+        mylist.insert(tk.END, "\n")
+        time.sleep(2)
+        repeat()
     bob.hideturtle()
     shape_info(shape, info)
 
@@ -109,9 +118,9 @@ def polygon(t, side=6, lenght=100):
 def shape_info(name, shape_data):
     """Output the calculations"""
     info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "ellipse": info_ell}
-    T = tk.Text(root)
-    T.pack()
-    T.insert(tk.END, info_dict[name](shape_data))
+    mylist.insert(tk.END, info_dict[name](shape_data))
+    mylist.insert(tk.END, "\n")
+    mylist.pack()
 
 def info_sq(side):
     """Info of the square"""
@@ -144,6 +153,7 @@ def repeat():
     """Run this code again"""
     screen.clear()
     main()
+    scrollbar.config(command = mylist.yview)
 
 main()
 
