@@ -169,14 +169,17 @@ def repeat():
     main()
     scrollbar.config(command = mylist.yview)
 
+def exit():
+    """Exit the program"""
+    root.destroy()
+    screen.bye()
+
 main()
 
 #Keep the programme running until closing the windows.
-top = tk.Tk()
-top.title("Calculate Again?")
-top.geometry("300x50")
-b = tk.Button(top,text = "Again", command = repeat)
-b.pack()
-top.mainloop()
+again_button = tk.Button(root, text="Calculate Again", command = repeat)
+again_button.pack()
+exit_button = tk.Button(root, text="Exit", command=exit)
+exit_button.pack()
 screen.mainloop()
 root.mainloop()
