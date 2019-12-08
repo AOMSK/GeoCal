@@ -178,8 +178,8 @@ main()
 
 #Keep the programme running until closing the windows.
 again_button = tk.Button(root, text="Calculate Again", command = repeat)
-again_button.pack()
 exit_button = tk.Button(root, text="Exit", command=exit)
-exit_button.pack()
+exit_button.pack(side=tk.RIGHT)
+again_button.pack(side=tk.RIGHT)
 screen.mainloop()
 root.mainloop()
