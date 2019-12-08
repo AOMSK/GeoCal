@@ -2,7 +2,7 @@
 A program to calculate and draw geometric shapes.
 This program is created with the intention to help people of all ages to learn geometry.
 
-# The Main Code is GeoCal.py.
+# The Main Code is GeoCal.py
 The other files are scraps used while developing the program.
 
 ### Currently Supports
