@@ -23,6 +23,8 @@ px_cm = ((w_px / (root.winfo_screenmmwidth() / 10) + h_px / (root.winfo_screenmm
 scrollbar = tk.Scrollbar(root, orient=tk.VERTICAL, activebackground="#00ffff")
 scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px*0.10))
+print("Geometric Calculator")
+print("Shapes currently supported:Square\nRectangles\nCircles\nEllipses\n")
 
 def main():
     """Main part of the programme.
