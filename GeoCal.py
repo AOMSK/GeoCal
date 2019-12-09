@@ -10,7 +10,7 @@ Created By
 62070196 Sipang Klinhom
 """
 
-import turtle, time
+import turtle
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt
 root = tk.Tk()
@@ -24,7 +24,8 @@ scrollbar = tk.Scrollbar(root, orient=tk.VERTICAL, activebackground="#00ffff")
 scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px*0.10))
 print("Geometric Calculator")
-print("Shapes currently supported:Square\nRectangles\nCircles\nEllipses\n")
+print("Shapes currently supported:\nSquare\nRectangles\nCircles\nEllipses")
+print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
 
 def main():
     """Main part of the programme.
@@ -34,19 +35,21 @@ def main():
     screen.title("Graphic Representation")
     screen.screensize(w_px//2, h_px//2)
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
-    shape = shape.lower()
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
     shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
     try:
+        shape = shape.lower()
         info = shapelist[shape](bob)
+        bob.hideturtle()
+        shape_info(shape, info)
+    except AttributeError as exception:
+        mylist.insert(tk.END, "(cancelled)")
+        mylist.insert(tk.END, "\n")
     except KeyError:
         mylist.insert(tk.END, "%s is an invalid Shape, or Shape not supported"%shape)
         mylist.insert(tk.END, "\n")
-        time.sleep(2)
         repeat()
-    bob.hideturtle()
-    shape_info(shape, info)
 
 #Quadrilaterals
 def square(t):
@@ -85,7 +88,7 @@ def circle(t):
     radius = turtle.textinput("Please input the radius", "in cm")
     radius = 5 if radius == "" else float(radius)
     radiuspx = radius * px_cm
-    radiuspx = w_px/6 if radiuspx > w_px//2 else radiuspx
+    radiuspx = w_px/4 if radiuspx > w_px//2 else radiuspx
     t.penup()
     t.setpos(0, -radiuspx,)
     t.pendown()
@@ -98,7 +101,7 @@ def ellipse(t):
     radius = [2, 3] if radius == "" else [float(i) for i in radius.split()]
     radiuspx = [i*px_cm for i in radius]
     ratio = radiuspx[0] / radiuspx[1] #will be used if input is too large to draw
-    radiuspx = [(w_px/12)*ratio, w_px/12] if any([radiuspx[0]/2 > h_px/4, radiuspx[1]/2 > w_px/4]) else radiuspx
+    radiuspx = [(w_px/6)*ratio, w_px/6] if any([radiuspx[0]/2 > h_px/4, radiuspx[1]/2 > w_px/4]) else radiuspx
     t.penup()
     t.setpos(-(radiuspx[1]), -(radiuspx[0]))
     t.pendown()
@@ -171,15 +174,16 @@ def repeat():
 
 def exit():
     """Exit the program"""
+    print("Exiting the program.")
     root.destroy()
     screen.bye()
 
 main()
 
 #Keep the programme running until closing the windows.
-again_button = tk.Button(root, text="Calculate Again", command = repeat)
-exit_button = tk.Button(root, text="Exit", command=exit)
+again_button = tk.Button(root, text="Calculate Again", command=repeat, bd=2)
+exit_button = tk.Button(root, text="  Exit  ", command=exit, bd=2)
 exit_button.pack(side=tk.RIGHT)
-again_button.pack(side=tk.RIGHT)
+again_button.pack(side=tk.RIGHT, padx=1)
 screen.mainloop()
 root.mainloop()
