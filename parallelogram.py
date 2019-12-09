@@ -11,7 +11,7 @@ pal.forward(90)"""
 
 def parallelogram():
     """#Draw Parallelogram"""
-    side = turtle.Turtle()
+    t = turtle.Turtle()
     side = turtle.textinput("Please input the size in cm", "base side")
     side = [float(i) for i in side.split()]
     for _ in range(2):
