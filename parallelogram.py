@@ -21,7 +21,7 @@ def parallelogram():
     for _ in range(2):
         t.forward(side[0])
         t.lt(180-(180-lesser_angle))
-        t.forward(side[1]*1.5)
+        t.forward(side[1])
         t.lt(180-lesser_angle)
     return side
 parallelogram()
