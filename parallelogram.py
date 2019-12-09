@@ -18,7 +18,6 @@ def parallelogram():
     side = [i * px_cm for i in side]
     sine = side[1] / side[2]
     lesser_angle = degrees(asin(sine))
-    print(lesser_angle)
     for _ in range(2):
         t.forward(side[0])
         t.lt(180-(180-lesser_angle))
