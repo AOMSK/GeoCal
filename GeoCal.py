@@ -12,7 +12,7 @@ Created By
 
 import turtle
 import tkinter as tk
-from math import pi, sin, asin, radians, degrees, sqrt
+from math import pi, sin, asin, radians, degrees, sqrt, acos
 root = tk.Tk()
 screen = turtle.Screen()
 root.title("Geometric Shape Calculator")
