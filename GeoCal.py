@@ -57,6 +57,7 @@ def main():
 def square(t):
     """Draw a square"""
     lenght = turtle.textinput("Please input the size", "in cm")
+    resized_size = 1
     if lenght == "":
         lenght = 10
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
@@ -67,15 +68,18 @@ def square(t):
     if lenghtpx > h_px//2:
         lenghtpx = h_px/1.2
         mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (lenght * px_cm) / lenghtpx
     t.penup()
     t.setpos(-(lenghtpx/2), -(lenghtpx/2))
     t.pendown()
     polygon(t, 4, lenghtpx)
+    reference(resized_size)
     return lenght
 
 def recta(t):
     """Draw a quadrilateral"""
     side = turtle.textinput("Please input the size in cm", "side1 side2")
+    resized_size = 1
     if side == "":
         side = [5, 10]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
@@ -87,6 +91,7 @@ def recta(t):
     if any([sidepx[0] > w_px//2, sidepx[1] > w_px//2]):
         sidepx = [(w_px/3)*ratio, w_px/3]
         mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (side[1] * px_cm) / sidepx[1]
     t.penup()
     t.setpos(-(sidepx[0]/2), -(sidepx[1]/2))
     t.pendown()
@@ -95,12 +100,14 @@ def recta(t):
         t.lt(90)
         t.fd(sidepx[1])
         t.lt(90)
+    reference(resized_size)
     return side
 
 #Ovals
 def circle(t):
     """Draw a circle of a certain radius"""
     radius = turtle.textinput("Please input the radius", "in cm")
+    resized_size = 1
     if radius == "":
         radius = 5
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
@@ -111,15 +118,18 @@ def circle(t):
     if radiuspx > h_px//2:
         radiuspx = w_px/4
         mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (radius * px_cm) / radiuspx
     t.penup()
     t.setpos(0, -radiuspx,)
     t.pendown()
     arc(t, radiuspx)
+    reference(resized_size)
     return radius
 
 def ellipse(t):
     """Draw an ellipse"""
     radius = turtle.textinput("Please enter the radiuses", "Minor Major\nin cm")
+    resized_size = 1
     if radius == "":
         radius = [2, 3]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
@@ -131,6 +141,7 @@ def ellipse(t):
         ratio = radiuspx[0] / radiuspx[1] #will be used if input is too large to draw
         radiuspx = [(w_px/6)*ratio, w_px/6]
         mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (radius[1] * px_cm) / radiuspx[1]
     t.penup()
     t.setpos(-(radiuspx[1]), -(radiuspx[0]))
     t.pendown()
@@ -139,6 +150,7 @@ def ellipse(t):
     arc(t, radiuspx[0]/3, 90)
     arc(t, radiuspx[1]/3, 90)
     arc(t, radiuspx[0]/3, 90)
+    reference(resized_size)
     return radius
 
 #Draw the lines
@@ -210,6 +222,19 @@ def exit():
     print("Exiting the program.")
     root.destroy()
     screen.bye()
+
+def reference(num):
+    """Draw a size reference"""
+    ref = turtle.Turtle()
+    ref.penup()
+    ref.setpos(w_px//4 + 2*px_cm, -(h_px//4 - 20))
+    ref.lt(180)
+    ref.pendown()
+    ref.fd(px_cm)
+    ref.penup()
+    ref.setpos(w_px//4 + px_cm, -(h_px//4))
+    ref.write("%.2f cm"%num)
+    ref.hideturtle()
 
 main()
 
