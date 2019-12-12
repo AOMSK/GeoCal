@@ -24,7 +24,7 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px/10))
 #root.maxsize(int(w_px//1.5), int(h_px//1.5))
 print("Geometric Calculator")
-print("Shapes currently supported:\nSquare\nRectangles\nCircles\nEllipses")
+print("Shapes currently supported:\nSquare\nRectangles\nParalellograms\nTrapezoids\nTriangles\nCircles\nEllipses")
 print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
 
 def main():
