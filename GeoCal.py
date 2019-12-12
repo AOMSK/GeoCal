@@ -24,7 +24,7 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px / 10))
 
 print("Geometric Calculator")
-print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses")
+print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses\nPolygons")
 print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
 
 def main():
@@ -38,7 +38,7 @@ def main():
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
     shapelist = {"square": square, "rectangle": recta, "trapezoid": trapezoid, "circle": circle,
-                 "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse}
+                 "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse, "polygon": poly}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s" % shape)
@@ -75,7 +75,7 @@ def square(t):
     t.penup()
     t.setpos(-(lenghtpx/2), -(lenghtpx/2))
     t.pendown()
-    polygon(t, 4, lenghtpx)
+    _polygon_(t, 4, lenghtpx)
     reference(resized_size)
     return lenght
 
@@ -247,6 +247,37 @@ def ellipse(t):
     reference(resized_size)
     return radius
 
+#Polygon
+def poly(t, side_num=6):
+    """Draw a square"""
+    lenght = turtle.textinput("Please input these values:", "lenght in cm and the number of edges")
+    resized_size = 1
+    if lenght == None:
+        cancel()
+        return
+    if incorrect(lenght, 1):
+        lenght = 10
+        mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
+    else:
+        lenght = lenght.split()
+        side_num = int(lenght[1])
+        lenght = float(lenght[0])
+    mylist.insert(tk.END, "%.2f, %d" % (lenght, side_num))
+    if side_num < 3:
+        mylist.insert(tk.END, "THERE IS NO POLYGON WITH %d SIDES." % side_num)
+        return
+    lenghtpx = lenght * px_cm
+    if (lenghtpx * side_num / pi) > h_px:
+        lenghtpx = (h_px * 90/100) * pi / side_num
+        mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (lenght * px_cm) / lenghtpx
+    t.penup()
+    t.setpos(-(lenghtpx/2), -((lenghtpx * side_num / pi) / 2))
+    t.pendown()
+    _polygon_(t, side_num, lenghtpx)
+    reference(resized_size)
+    return lenght, side_num
+
 #Draw the lines
 def arc(t, radius=50, angle=360.0):
     """Draw an arc"""
@@ -261,8 +292,8 @@ def polyline(t, side, lenght, angle):
         t.fd(lenght)
         t.lt(angle)
 
-def polygon(t, side=6, lenght=100):
-    """Draw a polygon of a certain side lenght and edges"""
+def _polygon_(t, side=6, lenght=100):
+    """Draw a _polygon_ of a certain side lenght and edges"""
     angle = 360.0/side
     polyline(t, side, lenght, angle)
 
@@ -270,9 +301,10 @@ def polygon(t, side=6, lenght=100):
 def shape_info(name, shape_data):
     """Output the calculations"""
     if name == None or shape_data == None:
+        mylist.pack()
         return
     info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap, "circle": info_circ,
-                 "parallelogram": info_parall, "triangle": info_tri, "ellipse": info_ell}
+                 "parallelogram": info_parall, "triangle": info_tri, "ellipse": info_ell, "polygon": info_poly}
     data = info_dict[name](shape_data)
     data = data.split("|")
     for i in data:
@@ -283,14 +315,14 @@ def shape_info(name, shape_data):
 def info_sq(side):
     """Info of the square"""
     text = "The area of this square is %.3f sqcm.  (Side^2)|"%(side**2)
-    text += "The circumference of this square is %.3f cm  (Side x 4)|"%(side*4)
+    text += "The perimeter of this square is %.3f cm  (Side x 4)|"%(side*4)
     text += "All four corners of a square are right angles (90°)."
     return text
 
 def info_rect(side):
     """Info of the rectangle"""
     text = "The area of this rectangle is %.3f sqcm.  (Width x Height)|"%(side[0] * side[1])
-    text += "The circumference of this rectangle is %.3f cm.  (Width x 2 + Height x 2)|"%(sum(side)*2)
+    text += "The perimeter of this rectangle is %.3f cm.  (Width x 2 + Height x 2)|"%(sum(side)*2)
     text += "All four corners of a rectangle are right angles (90°)."
     return text
 
@@ -309,23 +341,34 @@ def info_ell(radius):
 
 def info_tri(side_and_angles):
     """Info of the triangles"""
-    text = "The triangle perimeter is %.2f cm.  (P = a + b + c)  |" %(side_and_angles[0] + side_and_angles[1] + side_and_angles[2])
-    text += "The angle A is %.2f degrees.  (b**2 + c**2 - a**2)/(2*b*c)|" %side_and_angles[3]
-    text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)|" %side_and_angles[4]
-    text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)" %side_and_angles[5]
+    text = "The perimeter of this triangle is %.2f cm.  (P = a + b + c)  |" %(side_and_angles[0] + side_and_angles[1] + side_and_angles[2])
+    text += "The angle A is %.2f° degrees.  (b**2 + c**2 - a**2)/(2*b*c)|" %side_and_angles[3]
+    text += "The angle B is %.2f° degrees.  (c**2 + a**2 - b**2)/(2*c*a)|" %side_and_angles[4]
+    text += "The angle C is %.2f° degrees.  (a**2 + b**2 - c**2)/(2*a*b)" %side_and_angles[5]
     return text
 
 def info_trap(size):
     """Info of the trapezoid"""
     text = "The area of this trapezoid is %0.2f sqcm.|" % (1/2*(size[0] + size[1]) * size[4])
-    text += "The Perimeter of this trapezoid is %0.2f cm.|" % (size[0] + size[1] + size[2] + size[3])
-    text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f, %0.2f, %0.2f, %0.2f." % (size[5], 180 - size[5], size[6] + 90, 180 - (size[6] + 90))
+    text += "The perimeter of this trapezoid is %0.2f cm.|" % (size[0] + size[1] + size[2] + size[3])
+    text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f°, %0.2f°, %0.2f°, %0.2f°." % (size[5], 180 - size[5], size[6] + 90, 180 - (size[6] + 90))
     return text
 
 def info_parall(side):
     """Info of the parallelogram"""
     text = "The area of this parallelogram is %.2f sqcm.  (base x Height)|" % (side[0] * side[1])
-    text += "The circumference of this parallelogram is %.2f cm.  (Sum of all the sides)" % ((side[0] * 2) + (side[2] * 2))
+    text += "The perimeter of this parallelogram is %.2f cm.  (Sum of all the sides)" % ((side[0] * 2) + (side[2] * 2))
+    return text
+
+def info_poly(sides):
+    """Info of polygons"""
+    lenght, num = sides[0], sides[1]
+    poly_name_dict = {3: "triangle", 4: "quadrilateral", 5: "penta", 6: "hexa", 7: "hepta", 8: "hexa", 9: "nona",
+                      10: "deca", 11: "hendeca", 12: "dodeca"}
+    poly_name = poly_name_dict.get(num) + ("gon" * (num > 4)) if num in poly_name_dict.keys() else "%d sided polygon" % num
+    text = "This polygon is a(n) %s.|"%poly_name
+    text += "It has a perimeter of %.2f cm|"%(lenght * num)
+    text += "Each angles in this %s is %d°|"%(poly_name, 360 / num)
     return text
 
 def scatter(input_list):
