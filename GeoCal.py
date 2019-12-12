@@ -24,8 +24,9 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px / 10))
 
 print("Geometric Calculator")
-print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses\nPolygons")
+print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses\nPolygons\nArcs")
 print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
+print("Please input the shape name in singular form.")
 
 def main():
     """Main part of the programme.
@@ -38,7 +39,7 @@ def main():
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
     shapelist = {"square": square, "rectangle": recta, "trapezoid": trapezoid, "circle": circle,
-                 "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse, "polygon": poly}
+                 "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse, "polygon": poly, "arc": draw_arc}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s" % shape)
@@ -213,7 +214,7 @@ def circle(t):
     t.penup()
     t.setpos(0, -radiuspx,)
     t.pendown()
-    arc(t, radiuspx)
+    _arc_(t, radiuspx)
     reference(resized_size)
     return radius
 
@@ -240,10 +241,10 @@ def ellipse(t):
     t.setpos(-(radiuspx[1]), -(radiuspx[0]))
     t.pendown()
     t.rt(45)
-    arc(t, radiuspx[1]/3, 90)
-    arc(t, radiuspx[0]/3, 90)
-    arc(t, radiuspx[1]/3, 90)
-    arc(t, radiuspx[0]/3, 90)
+    _arc_(t, radiuspx[1]/3, 90)
+    _arc_(t, radiuspx[0]/3, 90)
+    _arc_(t, radiuspx[1]/3, 90)
+    _arc_(t, radiuspx[0]/3, 90)
     reference(resized_size)
     return radius
 
@@ -278,8 +279,23 @@ def poly(t, side_num=6):
     reference(resized_size)
     return lenght, side_num
 
+def draw_arc(t):
+    """Draw an arc with turtle"""
+    angr =turtle.textinput("Please input these values:", "Angle Radius")
+    if angr == None:
+        cancel()
+        return
+    if incorrect(angr, 1):
+        angr = [90, 10]
+        mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
+    else:
+        angr = [float(i) for i in angr.split()]
+    angle, radius = angr[0], angr[1]
+    _arc_(t, radius * px_cm / 3, angle)
+    return angr
+
 #Draw the lines
-def arc(t, radius=50, angle=360.0):
+def _arc_(t, radius=50, angle=360.0):
     """Draw an arc"""
     side = int(angle/(radius/30)) + 20
     lenght = (pi * radius * 2.0)/side
@@ -304,7 +320,7 @@ def shape_info(name, shape_data):
         mylist.pack()
         return
     info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap, "circle": info_circ,
-                 "parallelogram": info_parall, "triangle": info_tri, "ellipse": info_ell, "polygon": info_poly}
+                 "parallelogram": info_parall, "triangle": info_tri, "ellipse": info_ell, "polygon": info_poly, "arc": info_arc}
     data = info_dict[name](shape_data)
     data = data.split("|")
     for i in data:
@@ -370,6 +386,11 @@ def info_poly(sides):
     text += "It has a perimeter of %.2f cm|"%(lenght * num)
     text += "Each angles in this %s is %d°|"%(poly_name, 360 / num)
     return text
+
+def info_arc(angr):
+    """Info of arcs"""
+    angle, radius = angr[0], angr[1]
+    return "The lenght of this arc is %.2f cm" % (radius * 2 * pi * (angle / 360))
 
 def scatter(input_list):
     """Scatter the inputs into a string"""
