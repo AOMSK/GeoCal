@@ -282,6 +282,7 @@ def poly(t, side_num=6):
 def draw_arc(t):
     """Draw an arc with turtle"""
     angr =turtle.textinput("Please input these values:", "Angle Radius")
+    resized_size = 1
     if angr == None:
         cancel()
         return
@@ -290,8 +291,12 @@ def draw_arc(t):
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
         angr = [float(i) for i in angr.split()]
-    angle, radius = angr[0], angr[1]
-    _arc_(t, radius * px_cm / 3, angle)
+    angle, radius = angr[0], angr[1] * px_cm / 3
+    if radius > h_px // 2:
+        radius = h_px // 3
+        resized_size = angr[1] / radius
+    _arc_(t, radius, angle)
+    reference(resized_size)
     return angr
 
 #Draw the lines
