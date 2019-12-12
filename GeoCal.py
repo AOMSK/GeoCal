@@ -21,8 +21,8 @@ h_px = root.winfo_screenheight()
 px_cm = ((w_px / (root.winfo_screenmmwidth() / 10) + h_px / (root.winfo_screenmmheight() / 10)) / 2)
 scrollbar = tk.Scrollbar(root, orient=tk.VERTICAL, activebackground="#00ffff")
 scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
-mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px/10))
-#root.maxsize(int(w_px//1.5), int(h_px//1.5))
+mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px / 10))
+
 print("Geometric Calculator")
 print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses")
 print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
@@ -41,7 +41,7 @@ def main():
                  "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse}
     try:
         shape = shape.lower()
-        mylist.insert(tk.END, "Shape input: %s"%shape)
+        mylist.insert(tk.END, "Shape input: %s" % shape)
         info = shapelist[shape](bob)
         bob.hideturtle()
         shape_info(shape, info)
@@ -80,55 +80,55 @@ def square(t):
 
 def recta(t):
     """Draw a quadrilateral"""
-    side = turtle.textinput("Please input the size in cm", "side1 side2")
+    sides = turtle.textinput("Please input the size in cm", "sides1 sides2")
     resized_size = 1
-    if side == None:
+    if sides == None:
         cancel()
         return
-    if incorrect(side, 1):
-        side = [5, 10]
+    if incorrect(sides, 1):
+        sides = [5, 10]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
-        side = [float(i) for i in side.split()]
-    mylist.insert(tk.END, scatter(side))
-    sidepx = [i*px_cm for i in side]
-    ratio = sidepx[0] / sidepx[1] #will be used if input is too large to draw
-    if any([sidepx[0] > w_px//2, sidepx[1] > w_px//2]):
-        sidepx = [(w_px/3)*ratio, w_px/3]
+        sides = [float(i) for i in sides.split()]
+    mylist.insert(tk.END, scatter(sides))
+    sidespx = [i*px_cm for i in sides]
+    ratio = sidespx[0] / sidespx[1] #will be used if input is too large to draw
+    if any([sidespx[0] > w_px//2, sidespx[1] > w_px//2]):
+        sidespx = [(w_px/3)*ratio, w_px/3]
         mylist.insert(tk.END, "Input too large: drawing resized")
-        resized_size = (side[1] * px_cm) / sidepx[1]
+        resized_size = (sides[1] * px_cm) / sidespx[1]
     t.penup()
-    t.setpos(-(sidepx[0]/2), -(sidepx[1]/2))
+    t.setpos(-(sidespx[0]/2), -(sidespx[1]/2))
     t.pendown()
     for _ in range(2):
-        t.fd(sidepx[0])
+        t.fd(sidespx[0])
         t.lt(90)
-        t.fd(sidepx[1])
+        t.fd(sidespx[1])
         t.lt(90)
     reference(resized_size)
-    return side
+    return sides
 
 def trapezoid(t):
     """Draw trapezoid"""
     #enter trapezoid parts
-    size = turtle.textinput("Enter the sizes:", "Base_A Base_B Leg_A Leg_B Height")
-    if size == None:
+    sides = turtle.textinput("Enter the sides:", "Base_A Base_B Leg_A Leg_B Height")
+    if sides == None:
         cancel()
         return
-    if incorrect(size, 4):
-        size = [10, 9, 9, 8, 7]
+    if incorrect(sides, 4):
+        sides = [10, 9, 9, 8, 7]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
-        size = [float(i) for i in size.split()]
-    mylist.insert(tk.END, scatter(size))
-    base_a = size[0] * px_cm
-    base_b = size[1] * px_cm
-    leg_a = size[2] * px_cm
-    leg_b = size[3] * px_cm
-    height = size[4] * px_cm
+        sides = [float(i) for i in sides.split()]
+    mylist.insert(tk.END, scatter(sides))
+    base_a = sides[0] * px_cm
+    base_b = sides[1] * px_cm
+    leg_a = sides[2] * px_cm
+    leg_b = sides[3] * px_cm
+    height = sides[4] * px_cm
     #find base angles
-    angles_1 = degrees(asin(height/leg_a))
-    angles_2 = degrees(acos(height/leg_b))
+    angles_1 = degrees(asin(height / leg_a))
+    angles_2 = degrees(acos(height / leg_b))
     #Turtle
     t.fd(max(base_a, base_b))
     t.lt(90+(90-angles_1))
@@ -137,59 +137,58 @@ def trapezoid(t):
     t.fd(min(base_a, base_b))
     t.lt(90-angles_2)
     t.fd(leg_b)
-    #Info for trapezoid
-    return size + [angles_1, angles_2]
+    return sides + [angles_1, angles_2]
 
 def parallelogram(t):
     """#Draw a parallelogram"""
-    side = turtle.textinput("Please input the size in cm", "base height vertical side")
-    if side == None:
+    sides = turtle.textinput("Please input the sides in cm", "base height vertical sides")
+    if sides == None:
         cancel()
         return
-    if incorrect(side, 2):
-        side = [8, 5, 6]
+    if incorrect(sides, 2):
+        sides = [8, 5, 6]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
-        side = [float(i) for i in side.split()]
-    sidepx = [i * px_cm for i in side]
-    sine = side[1] / side[2]
+        sides = [float(i) for i in sides.split()]
+    sidespx = [i * px_cm for i in sides]
+    sine = sides[1] / sides[2]
     lesser_angle = degrees(asin(sine))
     for _ in range(2):
-        t.forward(sidepx[0])
+        t.forward(sidespx[0])
         t.lt(180-(180-lesser_angle))
-        t.forward(sidepx[1])
+        t.forward(sidespx[1])
         t.lt(180-lesser_angle)
-    text = info_parall(side)
-    return side
+    text = info_parall(sides)
+    return sides
 
 #Triangles
 def triangle(t):
     """Draw a triangle"""
-    side = turtle.textinput("Please input the 3 sides in cm.", "A B C")
+    sides = turtle.textinput("Please input the 3 sides in cm.", "A B C")
     resized_size = 1
-    if side == None:
+    if sides == None:
         cancel()
         return
-    if incorrect(side, 2):
-        side = [5, 5, 5]
+    if incorrect(sides, 2):
+        sides = [5, 5, 5]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
-        side = [float(i) for i in side.split()]
-    mylist.insert(tk.END, scatter(side))
-    sidepx = [i*px_cm for i in side]
-    angle_A = degrees(acos((side[1]**2 + side[2]**2 - side[0]**2)/(2*side[1]*side[2])))
-    angle_B = degrees(acos((side[2]**2 + side[0]**2 - side[1]**2)/(2*side[2]*side[0])))
-    angle_C = degrees(acos((side[0]**2 + side[1]**2 - side[2]**2)/(2*side[0]*side[1])))
+        sides = [float(i) for i in sides.split()]
+    mylist.insert(tk.END, scatter(sides))
+    sidespx = [i*px_cm for i in sides]
+    angle_A = degrees(acos((sides[1]**2 + sides[2]**2 - sides[0]**2)/(2*sides[1]*sides[2])))
+    angle_B = degrees(acos((sides[2]**2 + sides[0]**2 - sides[1]**2)/(2*sides[2]*sides[0])))
+    angle_C = degrees(acos((sides[0]**2 + sides[1]**2 - sides[2]**2)/(2*sides[0]*sides[1])))
     t.penup()
-    t.setpos(-(sidepx[0]/2), -(sidepx[1]/2))
+    t.setpos(-(sidespx[0]/2), -(sidespx[1]/2))
     t.pendown()
-    t.fd(sidepx[0])
+    t.fd(sidespx[0])
     t.lt(180-angle_C)
-    t.fd(sidepx[1])
+    t.fd(sidespx[1])
     t.lt(180-angle_A)
-    t.fd(sidepx[2])
+    t.fd(sidespx[2])
     reference(resized_size)
-    return side + [angle_A, angle_B, angle_C]
+    return sides + [angle_A, angle_B, angle_C]
 
 #Ovals
 def circle(t):
@@ -302,30 +301,30 @@ def info_circ(radius):
 
 def info_ell(radius):
     """Info of the ellipse"""
-    text = "The area of this ellipse is %.3f sqcm.  (π x a x b)|"%(pi * radius[0] * radius[1])
+    text = "The area of this ellipse is %.3f sqcm.  (π x a x b)|" % (pi * radius[0] * radius[1])
     text += "The approximate circumference of this "
-    text += "ellipse is %.3f cm.  (2 x π x √((a^2 + b^2)/2))    "%(2 * pi * sqrt((radius[0]**2 + radius[1]**2)/2))
+    text += "ellipse is %.3f cm.  (2 x π x √((a^2 + b^2)/2))" %(2 * pi * sqrt((radius[0]**2 + radius[1]**2) / 2))
     return text
 
 def info_tri(side_and_angles):
     """Info of the triangles"""
-    text = "The triangle perimeter is %.2f cm.  (P = a + b + c)  |"%(side_and_angles[0] + side_and_angles[1] + side_and_angles[2])
-    text += "The angle A is %.2f degrees.  (b**2 + c**2 - a**2)/(2*b*c)|"%side_and_angles[3]
-    text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)|"%side_and_angles[4]
-    text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)"%side_and_angles[5]
+    text = "The triangle perimeter is %.2f cm.  (P = a + b + c)  |" %(side_and_angles[0] + side_and_angles[1] + side_and_angles[2])
+    text += "The angle A is %.2f degrees.  (b**2 + c**2 - a**2)/(2*b*c)|" %side_and_angles[3]
+    text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)|" %side_and_angles[4]
+    text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)" %side_and_angles[5]
     return text
 
 def info_trap(size):
     """Info of the trapezoid"""
-    text = "The area of this trapezoid is %0.2f sqcm.|"%(1/2*(size[0]+size[1])*size[4])
-    text += "The Perimeter of this trapezoid is %0.2f cm.|"%(size[0]+size[1]+size[2]+size[3])
-    text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f, %0.2f, %0.2f, %0.2f."%(size[5], 180-size[5], size[6]+90, 180-(size[6]+90))
+    text = "The area of this trapezoid is %0.2f sqcm.|" % (1/2*(size[0] + size[1]) * size[4])
+    text += "The Perimeter of this trapezoid is %0.2f cm.|" % (size[0] + size[1] + size[2] + size[3])
+    text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f, %0.2f, %0.2f, %0.2f." % (size[5], 180 - size[5], size[6] + 90, 180 - (size[6] + 90))
     return text
 
 def info_parall(side):
     """Info of the parallelogram"""
-    text = "The area of this parallelogram is %.2f sqcm.  (base x Height)|"%(side[0] * side[1])
-    text += "The circumference of this parallelogram is %.2f cm.  (Sum of all the sides)"%((side[0] * 2) + (side[2] * 2))
+    text = "The area of this parallelogram is %.2f sqcm.  (base x Height)|" % (side[0] * side[1])
+    text += "The circumference of this parallelogram is %.2f cm.  (Sum of all the sides)" % ((side[0] * 2) + (side[2] * 2))
     return text
 
 def scatter(input_list):
@@ -353,7 +352,7 @@ def reference(num):
     ref.pendown()
     ref.fd(px_cm)
     ref.penup()
-    ref.setpos(w_px//4 + px_cm, -(h_px//4))
+    ref.setpos(w_px//4 + px_cm, - (h_px//4))
     ref.write("%.2f cm"%num)
     ref.hideturtle()
 
