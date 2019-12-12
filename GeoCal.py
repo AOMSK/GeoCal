@@ -37,7 +37,7 @@ def main():
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
-    shapelist = {"square": square, "circle": circle, "rectangle": recta, "triangle": triangle, "ellipse": ellipse}
+    shapelist = {"square": square, "rectangle": recta, "trapezoid": trapezoid, "circle": circle, "triangle": triangle, "ellipse": ellipse}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s"%shape)
@@ -106,6 +106,30 @@ def recta(t):
         t.lt(90)
     reference(resized_size)
     return side
+
+def trapezoid(t):
+    """Draw trapezoid"""
+    #enter trapezoid parts
+    size = turtle.textinput("Enter the sizes:", "Base_A Base_B Leg_A Leg_B Height")
+    size = [float(i) for i in size.split()]
+    base_a = size[0] * px_cm
+    base_b = size[1] * px_cm
+    leg_a = size[2] * px_cm
+    leg_b = size[3] * px_cm
+    height = size[4] * px_cm
+    #find base angles
+    angles_1 = degrees(asin(height/leg_a))
+    angles_2 = degrees(acos(height/leg_b))
+    #Turtle
+    t.fd(max(base_a, base_b))
+    t.lt(90+(90-angles_1))
+    t.fd(leg_a)
+    t.lt(angles_1)
+    t.fd(min(base_a, base_b))
+    t.lt(90-angles_2)
+    t.fd(leg_b)
+    #Info for trapezoid
+    return size + [angles_1, angles_2]
 
 #Triangles
 def triangle(t):
@@ -216,7 +240,7 @@ def shape_info(name, shape_data):
     """Output the calculations"""
     if name == None or shape_data == None:
         return
-    info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
+    info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
     data = info_dict[name](shape_data)
     data = data.split("|")
     for i in data:
@@ -258,6 +282,12 @@ def info_tri(side_and_angles):
     text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)|"%side_and_angles[4]
     text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)"%side_and_angles[5]
     return text
+
+def info_trap(size)
+    """Info of the trapezoid"""
+    text = "The area of this trapezoid is %0.2f sqcm."%(1/2*(size[0]+size[1])*size[4])
+    text += "The Perimeter of this trapezoid is %0.2f cm."%(size[0]+size[1]+size[2]+size[3])
+    text += "All angles in this trapezoid is %0.2f, %0.2f, %0.2f, %0.2f."%(size[5], 180-size[5], size[6]+90, 180-(size[6]+90))
 
 def scatter(input_list):
     """Scatter the inputs into a string"""
