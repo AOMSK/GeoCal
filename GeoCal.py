@@ -24,7 +24,7 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
 mylist = tk.Listbox(root, yscrollcommand=scrollbar.set, width=int(w_px/10))
 #root.maxsize(int(w_px//1.5), int(h_px//1.5))
 print("Geometric Calculator")
-print("Shapes currently supported:\nSquare\nRectangles\nParalellograms\nTrapezoids\nTriangles\nCircles\nEllipses")
+print("Shapes currently supported:\nSquares\nRectangles\nParallelograms\nTrapezoids\nTriangles\nCircles\nEllipses")
 print("Shapes too large will be resized to fit the screen but the calculations will still used the input given.")
 
 def main():
@@ -37,7 +37,8 @@ def main():
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
-    shapelist = {"square": square, "rectangle": recta, "trapezoid": trapezoid, "circle": circle, "triangle": triangle, "ellipse": ellipse}
+    shapelist = {"square": square, "rectangle": recta, "trapezoid": trapezoid, "circle": circle,
+                 "parallelogram": parallelogram, "triangle": triangle, "ellipse": ellipse}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s"%shape)
@@ -138,6 +139,28 @@ def trapezoid(t):
     t.fd(leg_b)
     #Info for trapezoid
     return size + [angles_1, angles_2]
+
+def parallelogram(t):
+    """#Draw a parallelogram"""
+    side = turtle.textinput("Please input the size in cm", "base height vertical side")
+    if side == None:
+        cancel()
+        return
+    if incorrect(side, 2):
+        side = [8, 5, 6]
+        mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
+    else:
+        side = [float(i) for i in side.split()]
+    sidepx = [i * px_cm for i in side]
+    sine = side[1] / side[2]
+    lesser_angle = degrees(asin(sine))
+    for _ in range(2):
+        t.forward(sidepx[0])
+        t.lt(180-(180-lesser_angle))
+        t.forward(sidepx[1])
+        t.lt(180-lesser_angle)
+    text = info_parall(side)
+    return side
 
 #Triangles
 def triangle(t):
@@ -248,7 +271,8 @@ def shape_info(name, shape_data):
     """Output the calculations"""
     if name == None or shape_data == None:
         return
-    info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap, "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
+    info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap, "circle": info_circ,
+                 "parallelogram": info_parall, "triangle": info_tri, "ellipse": info_ell}
     data = info_dict[name](shape_data)
     data = data.split("|")
     for i in data:
@@ -296,6 +320,12 @@ def info_trap(size):
     text = "The area of this trapezoid is %0.2f sqcm.|"%(1/2*(size[0]+size[1])*size[4])
     text += "The Perimeter of this trapezoid is %0.2f cm.|"%(size[0]+size[1]+size[2]+size[3])
     text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f, %0.2f, %0.2f, %0.2f."%(size[5], 180-size[5], size[6]+90, 180-(size[6]+90))
+    return text
+
+def info_parall(side):
+    """Info of the parallelogram"""
+    text = "The area of this parallelogram is %.2f sqcm.  (base x Height)|"%(side[0] * side[1])
+    text += "The circumference of this parallelogram is %.2f cm.  (Sum of all the sides)"%((side[0] * 2) + (side[2] * 2))
     return text
 
 def scatter(input_list):
