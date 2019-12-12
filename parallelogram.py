@@ -11,7 +11,7 @@ h_px = root.winfo_screenheight()
 px_cm = ((w_px / (root.winfo_screenmmwidth() / 10) + h_px / (root.winfo_screenmmheight() / 10)) / 2)
 
 def parallelogram():
-    """#Draw Parallelogram"""
+    """#Draw Parallelograms"""
     t = turtle.Turtle()
     side = turtle.textinput("Please input the size in cm", "base height vertical side")
     side = [float(i) for i in side.split()] 
