@@ -10,7 +10,7 @@ Created By
 62070196 Sipang Klinhom
 """
 
-import turtle, re
+import turtle
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt, acos
 root = tk.Tk()
@@ -38,7 +38,7 @@ def main():
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
-    shapelist = {"square": square, "circle": circle, "rectangle": recta, "triangls": triangle, "ellipse": ellipse}
+    shapelist = {"square": square, "circle": circle, "rectangle": recta, "triangle": triangle, "ellipse": ellipse}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s"%shape)
@@ -60,7 +60,7 @@ def square(t):
     if lenght == None:
         cancel()
         return
-    if not re.match(r"\d", lenght):
+    if incorrect(lenght, 0):
         lenght = 10
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -85,7 +85,7 @@ def recta(t):
     if side == None:
         cancel()
         return
-    if not re.match(r"(\d)(\w)(\d)", side):
+    if incorrect(side, 1):
         side = [5, 10]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -108,22 +108,33 @@ def recta(t):
     reference(resized_size)
     return side
 
-"""Triangle"""
-def triangle():
+#Triangles
+def triangle(t):
     """Draw a triangle"""
-    t = turtle.Turtle()
     side = turtle.textinput("Please input the 3 sides in cm.", "A B C")
-    side = [float(i) for i in side.split()]
+    resized_size = 1
+    if side == None:
+        cancel()
+        return
+    if incorrect(side, 2):
+        side = [5, 5, 5]
+        mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
+    else:
+        side = [float(i) for i in side.split()]
+    mylist.insert(tk.END, scatter(side))
     sidepx = [i*px_cm for i in side]
     angle_A = degrees(acos((side[1]**2 + side[2]**2 - side[0]**2)/(2*side[1]*side[2])))
     angle_B = degrees(acos((side[2]**2 + side[0]**2 - side[1]**2)/(2*side[2]*side[0])))
     angle_C = degrees(acos((side[0]**2 + side[1]**2 - side[2]**2)/(2*side[0]*side[1])))
+    t.penup()
+    t.setpos(-(sidepx[0]/2), -(sidepx[1]/2))
+    t.pendown()
     t.fd(sidepx[0])
     t.lt(180-angle_C)
     t.fd(sidepx[1])
     t.lt(180-angle_A)
     t.fd(sidepx[2])
-    text = info_tri(side, angle_A, angle_B, angle_C)
+    reference(resized_size)
     return side + [angle_A, angle_B, angle_C]
 
 #Ovals
@@ -134,7 +145,7 @@ def circle(t):
     if radius == None:
         cancel()
         return
-    if not re.match(r"\d", radius):
+    if incorrect(radius, 0):
         radius = 5
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -159,7 +170,7 @@ def ellipse(t):
     if radius == None:
         cancel()
         return
-    if not re.match(r"(\d)(\w)(\d)", radius):
+    if incorrect(radius, 1):
         radius = [2, 3]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -207,7 +218,8 @@ def shape_info(name, shape_data):
     if name == None or shape_data == None:
         return
     info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
-    data = info_dict[name](shape_data).split("|")
+    data = info_dict[name](shape_data)
+    data = data.split("|")
     for i in data:
         mylist.insert(tk.END, i)
     mylist.insert(tk.END, "\n")
@@ -283,6 +295,11 @@ def cancel():
     mylist.insert(tk.END, "\n")
     scrollbar.config(command = mylist.yview)
     mylist.pack()
+
+def incorrect(text, num):
+    """Check if the input is in the correct format"""
+    text = text.rstrip(" ")
+    return text.count(" ") != num or any([not i.isdigit() and i != "." for i in text.replace(" ", "")])
 
 main()
 
