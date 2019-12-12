@@ -19,8 +19,6 @@ The other files are scraps used while developing the program.
 
 62070088 Tawatchai Hanon
 
-62070115 Parkorn Kampao
-
 62070124 Piyaporn Phutpore
 
 62070196 Sipang Klinhom
