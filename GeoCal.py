@@ -111,7 +111,15 @@ def trapezoid(t):
     """Draw trapezoid"""
     #enter trapezoid parts
     size = turtle.textinput("Enter the sizes:", "Base_A Base_B Leg_A Leg_B Height")
-    size = [float(i) for i in size.split()]
+    if size == None:
+        cancel()
+        return
+    if incorrect(size, 4):
+        size = [10, 9, 9, 8, 7]
+        mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
+    else:
+        size = [float(i) for i in size.split()]
+    mylist.insert(tk.END, scatter(size))
     base_a = size[0] * px_cm
     base_b = size[1] * px_cm
     leg_a = size[2] * px_cm
@@ -240,7 +248,7 @@ def shape_info(name, shape_data):
     """Output the calculations"""
     if name == None or shape_data == None:
         return
-    info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
+    info_dict = {"square": info_sq, "rectangle": info_rect, "trapezoid": info_trap, "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
     data = info_dict[name](shape_data)
     data = data.split("|")
     for i in data:
@@ -283,11 +291,12 @@ def info_tri(side_and_angles):
     text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)"%side_and_angles[5]
     return text
 
-def info_trap(size)
+def info_trap(size):
     """Info of the trapezoid"""
-    text = "The area of this trapezoid is %0.2f sqcm."%(1/2*(size[0]+size[1])*size[4])
-    text += "The Perimeter of this trapezoid is %0.2f cm."%(size[0]+size[1]+size[2]+size[3])
-    text += "All angles in this trapezoid is %0.2f, %0.2f, %0.2f, %0.2f."%(size[5], 180-size[5], size[6]+90, 180-(size[6]+90))
+    text = "The area of this trapezoid is %0.2f sqcm.|"%(1/2*(size[0]+size[1])*size[4])
+    text += "The Perimeter of this trapezoid is %0.2f cm.|"%(size[0]+size[1]+size[2]+size[3])
+    text += "All angles of this trapezoid from lower right to lower left, counter clockwise are:| %0.2f, %0.2f, %0.2f, %0.2f."%(size[5], 180-size[5], size[6]+90, 180-(size[6]+90))
+    return text
 
 def scatter(input_list):
     """Scatter the inputs into a string"""
