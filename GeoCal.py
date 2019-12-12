@@ -50,6 +50,7 @@ def main():
     except KeyError:
         mylist.insert(tk.END, "%s is an invalid Shape, or Shape not supported"%shape)
         mylist.insert(tk.END, "\n")
+        mylist.pack()
         repeat()
 
 #Quadrilaterals
