@@ -12,6 +12,8 @@ The other files are scraps used while developing the program.
 - [x] Triangles
 - [x] Circles
 - [x] Ellipses
+- [x] Polygons
+- [x] Arcs
 - [x] Near Life-Like Measurements for shapes that fits the screen
 
 ### Created By
