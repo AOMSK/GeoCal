@@ -10,7 +10,7 @@ Created By
 62070196 Sipang Klinhom
 """
 
-import turtle
+import turtle, re
 import tkinter as tk
 from math import pi, sin, asin, radians, degrees, sqrt, acos
 root = tk.Tk()
@@ -46,8 +46,7 @@ def main():
         bob.hideturtle()
         shape_info(shape, info)
     except AttributeError as exception:
-        mylist.insert(tk.END, "(cancelled)")
-        mylist.insert(tk.END, "\n")
+        cancel()
     except KeyError:
         mylist.insert(tk.END, "%s is an invalid Shape, or Shape not supported"%shape)
         mylist.insert(tk.END, "\n")
@@ -58,7 +57,10 @@ def square(t):
     """Draw a square"""
     lenght = turtle.textinput("Please input the size", "in cm")
     resized_size = 1
-    if lenght == "":
+    if lenght == None:
+        cancel()
+        return
+    if not re.match(r"\d", lenght):
         lenght = 10
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -80,7 +82,10 @@ def recta(t):
     """Draw a quadrilateral"""
     side = turtle.textinput("Please input the size in cm", "side1 side2")
     resized_size = 1
-    if side == "":
+    if side == None:
+        cancel()
+        return
+    if not re.match(r"(\d)(\w)(\d)", side):
         side = [5, 10]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -108,7 +113,10 @@ def circle(t):
     """Draw a circle of a certain radius"""
     radius = turtle.textinput("Please input the radius", "in cm")
     resized_size = 1
-    if radius == "":
+    if radius == None:
+        cancel()
+        return
+    if not re.match(r"\d", radius):
         radius = 5
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -130,7 +138,10 @@ def ellipse(t):
     """Draw an ellipse"""
     radius = turtle.textinput("Please enter the radiuses", "Minor Major\nin cm")
     resized_size = 1
-    if radius == "":
+    if radius == None:
+        cancel()
+        return
+    if not re.match(r"(\d)(\w)(\d)", radius):
         radius = [2, 3]
         mylist.insert(tk.END, "DIDN'T INPUT THE REQUIRED VALUE(S), USING THE DEFAULT VALUE(S)")
     else:
@@ -175,34 +186,38 @@ def polygon(t, side=6, lenght=100):
 #Shows the infomations
 def shape_info(name, shape_data):
     """Output the calculations"""
+    if name == None or shape_data == None:
+        return
     info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "ellipse": info_ell}
-    mylist.insert(tk.END, info_dict[name](shape_data))
+    data = info_dict[name](shape_data).split("|")
+    for i in data:
+        mylist.insert(tk.END, i)
     mylist.insert(tk.END, "\n")
     mylist.pack()
 
 def info_sq(side):
     """Info of the square"""
-    text = "The area of this square is %.3f sqcm.  (Side^2)    "%(side**2)
-    text += "The circumference of this square is %.3f cm  (Side x 4)    "%(side*4)
+    text = "The area of this square is %.3f sqcm.  (Side^2)|"%(side**2)
+    text += "The circumference of this square is %.3f cm  (Side x 4)|"%(side*4)
     text += "All four corners of a square are right angles (90°)."
     return text
 
 def info_rect(side):
     """Info of the rectangle"""
-    text = "The area of this rectangle is %.3f sqcm.  (Width x Height)    "%(side[0] * side[1])
-    text += "The circumference of this rectangle is %.3f cm.  (Width x 2 + Height x 2)    "%(sum(side)*2)
+    text = "The area of this rectangle is %.3f sqcm.  (Width x Height)|"%(side[0] * side[1])
+    text += "The circumference of this rectangle is %.3f cm.  (Width x 2 + Height x 2)|"%(sum(side)*2)
     text += "All four corners of a rectangle are right angles (90°)."
     return text
 
 def info_circ(radius):
     """Infro of the circle"""
-    text = "The area of this circle is %.3f sqcm.  (π x r^2)    "%(pi * radius ** 2)
+    text = "The area of this circle is %.3f sqcm.  (π x r^2)|"%(pi * radius ** 2)
     text += "The circumference of this circle is %.3f cm.  (2 x π x r)    "%(2 * pi * radius)
     return text
 
 def info_ell(radius):
     """Info of the radius"""
-    text = "The area of this ellipse is %.3f sqcm.  (π x a x b)    "%(pi * radius[0] * radius[1])
+    text = "The area of this ellipse is %.3f sqcm.  (π x a x b)|"%(pi * radius[0] * radius[1])
     text += "The approximate circumference of this "
     text += "ellipse is %.3f cm.  (2 x π x √((a^2 + b^2)/2))    "%(2 * pi * sqrt((radius[0]**2 + radius[1]**2)/2))
     return text
@@ -235,6 +250,13 @@ def reference(num):
     ref.setpos(w_px//4 + px_cm, -(h_px//4))
     ref.write("%.2f cm"%num)
     ref.hideturtle()
+
+def cancel():
+    """Cancel the calculation"""
+    mylist.insert(tk.END, "(cancelled)")
+    mylist.insert(tk.END, "\n")
+    scrollbar.config(command = mylist.yview)
+    mylist.pack()
 
 main()
 
