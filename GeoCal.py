@@ -38,7 +38,7 @@ def main():
     shape = turtle.textinput("Geometric Shape Calculator", "Please input your desired shaped:")
     bob = turtle.Turtle()
     bob.delay = 1e-20 #set the turtle drawing speed
-    shapelist = {"square": square, "circle": circle, "rectangle": recta, "ellipse": ellipse}
+    shapelist = {"square": square, "circle": circle, "rectangle": recta, "triangls": triangle, "ellipse": ellipse}
     try:
         shape = shape.lower()
         mylist.insert(tk.END, "Shape input: %s"%shape)
@@ -107,6 +107,24 @@ def recta(t):
         t.lt(90)
     reference(resized_size)
     return side
+
+"""Triangle"""
+def triangle():
+    """Draw a triangle"""
+    t = turtle.Turtle()
+    side = turtle.textinput("Please input the 3 sides in cm.", "A B C")
+    side = [float(i) for i in side.split()]
+    sidepx = [i*px_cm for i in side]
+    angle_A = degrees(acos((side[1]**2 + side[2]**2 - side[0]**2)/(2*side[1]*side[2])))
+    angle_B = degrees(acos((side[2]**2 + side[0]**2 - side[1]**2)/(2*side[2]*side[0])))
+    angle_C = degrees(acos((side[0]**2 + side[1]**2 - side[2]**2)/(2*side[0]*side[1])))
+    t.fd(sidepx[0])
+    t.lt(180-angle_C)
+    t.fd(sidepx[1])
+    t.lt(180-angle_A)
+    t.fd(sidepx[2])
+    text = info_tri(side, angle_A, angle_B, angle_C)
+    return side + [angle_A, angle_B, angle_C]
 
 #Ovals
 def circle(t):
@@ -188,7 +206,7 @@ def shape_info(name, shape_data):
     """Output the calculations"""
     if name == None or shape_data == None:
         return
-    info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "ellipse": info_ell}
+    info_dict = {"square": info_sq, "rectangle": info_rect, "circle": info_circ, "triangle": info_tri, "ellipse": info_ell}
     data = info_dict[name](shape_data).split("|")
     for i in data:
         mylist.insert(tk.END, i)
@@ -216,10 +234,18 @@ def info_circ(radius):
     return text
 
 def info_ell(radius):
-    """Info of the radius"""
+    """Info of the ellipse"""
     text = "The area of this ellipse is %.3f sqcm.  (π x a x b)|"%(pi * radius[0] * radius[1])
     text += "The approximate circumference of this "
     text += "ellipse is %.3f cm.  (2 x π x √((a^2 + b^2)/2))    "%(2 * pi * sqrt((radius[0]**2 + radius[1]**2)/2))
+    return text
+
+def info_tri(side_and_angles):
+    """Info of the triangles"""
+    text = "The triangle perimeter is %.2f cm.  (P = a + b + c)  |"%(side_and_angles[0] + side_and_angles[1] + side_and_angles[2])
+    text += "The angle A is %.2f degrees.  (b**2 + c**2 - a**2)/(2*b*c)|"%side_and_angles[3]
+    text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)|"%side_and_angles[4]
+    text += "The angle C is %.2f degrees.  (a**2 + b**2 - c**2)/(2*a*b)"%side_and_angles[5]
     return text
 
 def scatter(input_list):
