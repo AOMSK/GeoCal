@@ -28,7 +28,7 @@ def triangle():
     print(text)
 
 def info_tri(side, angle_A, angle_B, angle_C):
-    """Info of the square"""
+    """Info of the triangle"""
     text = "The triangle perimeter is %.2f cm.  (P = a + b + c)  \n"%(side[0] + side[1] + side[2])
     text += "The angle A is %.2f degrees.  (b**2 + c**2 - a**2)/(2*b*c)\n"%angle_A
     text += "The angle B is %.2f degrees.  (c**2 + a**2 - b**2)/(2*c*a)\n"%angle_B
