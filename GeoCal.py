@@ -82,7 +82,7 @@ def square(t):
 
 def recta(t):
     """Draw a quadrilateral"""
-    sides = turtle.textinput("Please input the size in cm", "sides1 sides2")
+    sides = turtle.textinput("Please input the size in cm", "width height")
     resized_size = 1
     if sides == None:
         cancel()
@@ -94,11 +94,7 @@ def recta(t):
         sides = [float(i) for i in sides.split()]
     mylist.insert(tk.END, scatter(sides))
     sidespx = [i*px_cm for i in sides]
-    ratio = sidespx[0] / sidespx[1] #will be used if input is too large to draw
-    if any([sidespx[0] > w_px//2, sidespx[1] > w_px//2]):
-        sidespx = [(w_px/3)*ratio, w_px/3]
-        mylist.insert(tk.END, "Input too large: drawing resized")
-        resized_size = (sides[1] * px_cm) / sidespx[1]
+    sidespx, resized_size = resize(sidespx, sides)
     t.penup()
     t.setpos(-(sidespx[0]/2), -(sidespx[1]/2))
     t.pendown()
@@ -125,11 +121,7 @@ def trapezoid(t):
         sides = [float(i) for i in sides.split()]
     mylist.insert(tk.END, scatter(sides))
     sidespx = [i * px_cm for i in sides]
-    if any([i > w_px //2 for i in sidespx]):
-        ratio = w_px // 2 / sidespx[0]
-        sidespx = [i * ratio for i in sidespx]
-        mylist.insert(tk.END, "Input too large: drawing resized")
-        resized_size = (sides[0] * px_cm) / sidespx[0]
+    sidespx, resized_size = resize(sidespx, sides)
     base_a = sidespx[0]
     base_b = sidespx[1]
     leg_a = sidespx[2]
@@ -165,11 +157,7 @@ def parallelogram(t):
     else:
         sides = [float(i) for i in sides.split()]
     sidespx = [i * px_cm for i in sides]
-    if any([i > w_px // 2 for i in sidespx]):
-        ratio = w_px / 2 / sidespx[0]
-        sidespx = [i * ratio for i in sidespx]
-        mylist.insert(tk.END, "Input too large: drawing resized")
-        resized_size = (sides[0] * px_cm) / sidespx[0]
+    sidespx, resized_size = resize(sidespx, sides)
     sine = sides[1] / sides[2]
     lesser_angle = degrees(asin(sine))
     t.penup()
@@ -199,6 +187,7 @@ def triangle(t):
         sides = [float(i) for i in sides.split()]
     mylist.insert(tk.END, scatter(sides))
     sidespx = [i*px_cm for i in sides]
+    sidespx, resized_size = resize(sidespx, sides)
     angle_A = degrees(acos((sides[1]**2 + sides[2]**2 - sides[0]**2)/(2*sides[1]*sides[2])))
     angle_B = degrees(acos((sides[2]**2 + sides[0]**2 - sides[1]**2)/(2*sides[2]*sides[0])))
     angle_C = degrees(acos((sides[0]**2 + sides[1]**2 - sides[2]**2)/(2*sides[0]*sides[1])))
@@ -284,7 +273,7 @@ def poly(t, side_num=6):
         lenght = lenght.split()
         side_num = int(lenght[1])
         lenght = float(lenght[0])
-    mylist.insert(tk.END, "%.2f, %d" % (lenght, side_num))
+    mylist.insert(tk.END, "%.2f %d" % (lenght, side_num))
     if side_num < 3:
         mylist.insert(tk.END, "THERE IS NO POLYGON WITH %d SIDES." % side_num)
         return
@@ -458,6 +447,15 @@ def incorrect(text, num):
     """Check if the input is in the correct format"""
     text = text.rstrip(" ")
     return text.count(" ") != num or any([not i.isdigit() and i != "." for i in text.replace(" ", "")])
+
+def resize(sidespx, original):
+    """Check if inputs need to be resized"""
+    if any([i > h_px // 2 for i in sidespx]):
+        ratio = h_px / 2 / sidespx[0]
+        sidespx = [i * ratio for i in sidespx]
+        mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (original[0] * px_cm) / sidespx[0]
+    return sidespx, resized_size
 
 main()
 
