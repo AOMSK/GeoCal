@@ -131,8 +131,8 @@ def trapezoid(t):
     t.setpos(-(base_a / 2), -(height / 2))
     t.pendown()
     #find base angles
-    angles_1 = degrees(asin(height / leg_a))
-    angles_2 = degrees(acos(height / leg_b))
+    angles_1 = degrees(asin(abs(height / leg_a)))
+    angles_2 = degrees(acos(abs(height / leg_b)))
     #Turtle
     t.fd(max(base_a, base_b))
     t.lt(90+(90-angles_1))
@@ -450,6 +450,7 @@ def incorrect(text, num):
 
 def resize(sidespx, original):
     """Check if inputs need to be resized"""
+    resized_size = 1
     if any([i > h_px // 2 for i in sidespx]):
         ratio = h_px / 2 / sidespx[0]
         sidespx = [i * ratio for i in sidespx]
