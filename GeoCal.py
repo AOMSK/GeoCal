@@ -114,6 +114,7 @@ def trapezoid(t):
     """Draw trapezoid"""
     #enter trapezoid parts
     sides = turtle.textinput("Enter the sides:", "Base_A Base_B Leg_A Leg_B Height")
+    resized_size = 1
     if sides == None:
         cancel()
         return
@@ -123,11 +124,20 @@ def trapezoid(t):
     else:
         sides = [float(i) for i in sides.split()]
     mylist.insert(tk.END, scatter(sides))
-    base_a = sides[0] * px_cm
-    base_b = sides[1] * px_cm
-    leg_a = sides[2] * px_cm
-    leg_b = sides[3] * px_cm
-    height = sides[4] * px_cm
+    sidespx = [i * px_cm for i in sides]
+    if any([i > w_px //2 for i in sidespx]):
+        ratio = w_px // 2 / sidespx[0]
+        sidespx = [i * ratio for i in sidespx]
+        mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (sides[0] * px_cm) / sidespx[0]
+    base_a = sidespx[0]
+    base_b = sidespx[1]
+    leg_a = sidespx[2]
+    leg_b = sidespx[3]
+    height = sidespx[4]
+    t.penup()
+    t.setpos(-(base_a / 2), -(height / 2))
+    t.pendown()
     #find base angles
     angles_1 = degrees(asin(height / leg_a))
     angles_2 = degrees(acos(height / leg_b))
@@ -139,11 +149,13 @@ def trapezoid(t):
     t.fd(min(base_a, base_b))
     t.lt(90-angles_2)
     t.fd(leg_b)
+    reference(resized_size)
     return sides + [angles_1, angles_2]
 
 def parallelogram(t):
     """#Draw a parallelogram"""
     sides = turtle.textinput("Please input the sides in cm", "base height vertical sides")
+    resized_size = 1
     if sides == None:
         cancel()
         return
@@ -153,14 +165,23 @@ def parallelogram(t):
     else:
         sides = [float(i) for i in sides.split()]
     sidespx = [i * px_cm for i in sides]
+    if any([i > w_px // 2 for i in sidespx]):
+        ratio = w_px / 2 / sidespx[0]
+        sidespx = [i * ratio for i in sidespx]
+        mylist.insert(tk.END, "Input too large: drawing resized")
+        resized_size = (sides[0] * px_cm) / sidespx[0]
     sine = sides[1] / sides[2]
     lesser_angle = degrees(asin(sine))
+    t.penup()
+    t.setpos(-(sidespx[0]/2), -(sidespx[1]/2))
+    t.pendown()
     for _ in range(2):
         t.forward(sidespx[0])
         t.lt(180-(180-lesser_angle))
         t.forward(sidespx[1])
         t.lt(180-lesser_angle)
     text = info_parall(sides)
+    reference(resized_size)
     return sides
 
 #Triangles
